@@ -9,6 +9,9 @@ const { data, columns } = useOrders();
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
+        <template #right>
+          <UserButton after-sign-out-url="/sign-in" />
+        </template>
       </UDashboardNavbar>
     </template>
 
@@ -19,4 +22,3 @@ const { data, columns } = useOrders();
     </template>
   </UDashboardPanel>
 </template>
-

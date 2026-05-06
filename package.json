@@ -18,6 +18,7 @@
   "dependencies": {
     "@clerk/localizations": "^4.5.1",
     "@clerk/nuxt": "^2.2.2",
+    "@clerk/ui": "^1.8.0",
     "@iconify-json/lucide": "^1.2.101",
     "@iconify-json/simple-icons": "^1.2.77",
     "@internationalized/date": "^3.12.0",

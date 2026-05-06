@@ -9,9 +9,12 @@ const { organization } = useOrganization();
 <template>
   <UDashboardPanel id="home">
     <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Главная" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
+        </template>
+        <template #right>
+          <UserButton after-sign-out-url="/sign-in" />
         </template>
       </UDashboardNavbar>
     </template>

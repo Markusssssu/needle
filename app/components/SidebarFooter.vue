@@ -19,16 +19,7 @@ defineProps<{ collapsed: boolean }>();
       class="w-full flex items-center"
       :class="collapsed ? 'justify-center' : 'gap-3'"
     >
-      <OrganizationSwitcher v-if="!collapsed" />
-
-      <div
-        :class="
-          !collapsed &&
-          'ml-2 border-l border-gray-200 dark:border-gray-800 pl-3'
-        "
-      >
-        <UserButton after-sign-out-url="/sign-in" />
-      </div>
+      <OrganizationSwitcher :appearance="{ theme: dark }" />
     </div>
 
     <UTooltip v-else text="Войти" :popper="{ placement: 'right' }">

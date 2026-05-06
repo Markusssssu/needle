@@ -1,16 +1,10 @@
 <template>
   <UDashboardPanel id="secutiry">
     <template #header>
-      <UDashboardNavbar title="Безопасность" :ui="{ right: 'gap-3' }">
-        <template #leading>
-          <UDashboardSidebarCollapse />
-        </template>
-      </UDashboardNavbar>
+      <div>Безопасность</div>
     </template>
     <template #body>
-      <div>
-        appearance
-      </div>
+      <Qrcode value="https://youtube.com" size="56" width="56" />
     </template>
   </UDashboardPanel>
 </template>

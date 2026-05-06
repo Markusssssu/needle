@@ -9,27 +9,27 @@ export const useQuickAccess = () => {
         title: "QR-Сканер",
         icon: "i-lucide-qr-code",
         to: "/qrs/scan",
-        color: "text-blue-500"
+        color: "text-blue-500",
       },
       {
-        title: "AI-Джестер",
-        icon: "i-lucide-sparkles",
-        to: "/analytics",
-        color: "text-purple-500"
+        title: "Сообщения",
+        icon: "i-lucide-messages-square",
+        to: "/inbox",
+        color: "text-purple-500",
       },
       {
         title: "Клиенты",
         icon: "i-lucide-contact-2",
         to: "/customers",
-        color: "text-emerald-500"
+        color: "text-emerald-500",
       },
       {
         title: "Заказы",
         icon: "i-lucide-shopping-cart",
         to: "/orders",
-        color: "text-orange-500"
-      }
-    ].filter(item => canAccessPath(currentRole.value, item.to))
+        color: "text-orange-500",
+      },
+    ].filter((item) => canAccessPath(currentRole.value, item.to)),
   );
 
   return { items };

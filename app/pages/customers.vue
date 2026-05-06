@@ -9,6 +9,9 @@ const { data, columns } = useCustomers();
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
+        <template #right>
+          <UserButton after-sign-out-url="/sign-in" />
+        </template>
       </UDashboardNavbar>
     </template>
 

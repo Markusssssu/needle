@@ -1,4 +1,5 @@
 import { ruRU } from "@clerk/localizations";
+import { dark, neobrutalism } from "@clerk/ui/themes";
 
 export default defineNuxtConfig({
   modules: [
@@ -11,6 +12,17 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
   ],
+
+  runtimeConfig: {
+    clerk: {
+      secretKey: process.env.NUXT_CLERK_SECRET_KEY || "",
+    },
+    public: {
+      clerk: {
+        publishableKey: process.env.NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
+      },
+    },
+  },
 
   ui: {
     safelistColors: [
@@ -45,12 +57,8 @@ export default defineNuxtConfig({
 
   clerk: {
     appearance: {
-      baseTheme: undefined,
-      layout: {
-        socialButtonsVariant: "iconButton",
-      },
+      theme: [dark],
     },
-
     localization: ruRU,
   },
 

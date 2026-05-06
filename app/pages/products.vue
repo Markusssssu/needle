@@ -9,6 +9,9 @@ const { data, columns } = useProducts();
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
+        <template #right>
+          <UserButton after-sign-out-url="/sign-in" />
+        </template>
       </UDashboardNavbar>
     </template>
 

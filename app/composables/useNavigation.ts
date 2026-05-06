@@ -17,6 +17,14 @@ export const useNavigation = () => {
         },
       },
       {
+        label: "Cообщения",
+        icon: "i-lucide-messages-square",
+        to: "/inbox",
+        onSelect: () => {
+          open.value = false;
+        },
+      },
+      {
         label: "Заказы",
         icon: "i-lucide-shopping-cart",
         to: "/orders",
