@@ -2,11 +2,16 @@ import { eq } from "drizzle-orm";
 import { coupons } from "~~/server/db/schema";
 import { db } from "~~/server/utils/db";
 
-type CouponStatus = "valid" | "inactive" | "expired" | "exhausted" | "not_found";
+type CouponStatus =
+  | "valid"
+  | "inactive"
+  | "expired"
+  | "exhausted"
+  | "not_found";
 
 const buildDiscountLabel = (
   discountType: "percentage" | "fixed" | null,
-  discountValue: string | number | null
+  discountValue: string | number | null,
 ) => {
   if (!discountType || discountValue === null || discountValue === undefined) {
     return "Без скидки";
@@ -20,16 +25,18 @@ const buildDiscountLabel = (
     style: "currency",
     currency: "RUB",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(Number(discountValue));
 };
 
-const getCouponStatus = (coupon: {
-  isActive: boolean | null;
-  usageLimit: number | null;
-  usedCount: number | null;
-  campaign?: { expiresAt: Date | null } | null;
-} | null): CouponStatus => {
+const getCouponStatus = (
+  coupon: {
+    isActive: boolean | null;
+    usageLimit: number | null;
+    usedCount: number | null;
+    campaign?: { expiresAt: Date | null } | null;
+  } | null,
+): CouponStatus => {
   if (!coupon) {
     return "not_found";
   }
@@ -38,7 +45,10 @@ const getCouponStatus = (coupon: {
     return "inactive";
   }
 
-  if (coupon.campaign?.expiresAt && coupon.campaign.expiresAt.getTime() < Date.now()) {
+  if (
+    coupon.campaign?.expiresAt &&
+    coupon.campaign.expiresAt.getTime() < Date.now()
+  ) {
     return "expired";
   }
 
@@ -92,12 +102,12 @@ export const extractCouponCode = (value: string) => {
 export const listCouponsWithMeta = async (origin: string) => {
   const records = await db.query.coupons.findMany({
     with: {
-      campaign: true
+      campaign: true,
     },
-    orderBy: (coupons, { desc }) => [desc(coupons.code)]
+    orderBy: (coupons, { desc }) => [desc(coupons.code)],
   });
 
-  return records.map(coupon => {
+  return records.map((coupon) => {
     const status = getCouponStatus(coupon);
     const shareUrl = `${origin}/gift/${coupon.code}`;
 
@@ -113,17 +123,17 @@ export const listCouponsWithMeta = async (origin: string) => {
       discountValue: coupon.campaign?.discountValue ?? null,
       discountLabel: buildDiscountLabel(
         coupon.campaign?.discountType ?? null,
-        coupon.campaign?.discountValue ?? null
+        coupon.campaign?.discountValue ?? null,
       ),
       expiresAt: coupon.campaign?.expiresAt?.toISOString() ?? null,
-      shareUrl
+      shareUrl,
     };
   });
 };
 
 export const validateCouponByScannedValue = async (
   scannedValue: string,
-  origin: string
+  origin: string,
 ) => {
   const code = extractCouponCode(scannedValue);
 
@@ -137,15 +147,15 @@ export const validateCouponByScannedValue = async (
       statusLabel: getStatusLabel("not_found"),
       message: "QR-код пустой или не содержит код купона",
       discountLabel: null,
-      shareUrl: null
+      shareUrl: null,
     };
   }
 
   const coupon = await db.query.coupons.findFirst({
     where: eq(coupons.code, code),
     with: {
-      campaign: true
-    }
+      campaign: true,
+    },
   });
 
   const status = getCouponStatus(coupon);
@@ -160,13 +170,13 @@ export const validateCouponByScannedValue = async (
       statusLabel: getStatusLabel(status),
       message: "Такой QR-код не найден в базе данных",
       discountLabel: null,
-      shareUrl: null
+      shareUrl: null,
     };
   }
 
   const discountLabel = buildDiscountLabel(
     coupon.campaign?.discountType ?? null,
-    coupon.campaign?.discountValue ?? null
+    coupon.campaign?.discountValue ?? null,
   );
 
   return {
@@ -185,6 +195,6 @@ export const validateCouponByScannedValue = async (
     usageLimit: coupon.usageLimit,
     usedCount: coupon.usedCount ?? 0,
     expiresAt: coupon.campaign?.expiresAt?.toISOString() ?? null,
-    shareUrl: `${origin}/gift/${coupon.code}`
+    shareUrl: `${origin}/gift/${coupon.code}`,
   };
 };

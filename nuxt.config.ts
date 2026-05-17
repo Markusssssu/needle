@@ -14,10 +14,13 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
+    talkjsSecretKey: process.env.TALKJS_SECRET_KEY,
+
     clerk: {
       secretKey: process.env.NUXT_CLERK_SECRET_KEY || "",
     },
     public: {
+      talkjsAppId: process.env.NUXT_PUBLIC_TALKJS_APP_ID,
       clerk: {
         publishableKey: process.env.NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
       },

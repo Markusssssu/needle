@@ -38,6 +38,12 @@ importers:
       '@pinia/nuxt':
         specifier: 0.11.3
         version: 0.11.3(magicast@0.5.2)(pinia@3.0.4(typescript@6.0.2)(vue@3.5.32(typescript@6.0.2)))
+      '@talkjs/core':
+        specifier: ^1.10.0
+        version: 1.10.0
+      '@talkjs/web-components':
+        specifier: ^0.1.10
+        version: 0.1.10(@talkjs/core@1.10.0)
       '@tanstack/table-core':
         specifier: ^8.21.3
         version: 8.21.3
@@ -74,6 +80,9 @@ importers:
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
+      talkjs:
+        specifier: ^0.46.0
+        version: 0.46.0
       vue:
         specifier: ^3.5.32
         version: 3.5.32(typescript@6.0.2)
@@ -2319,6 +2328,14 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
+  '@talkjs/core@1.10.0':
+    resolution: {integrity: sha512-4A5fW70EJ78sR12aifKt1JPe6W4p7MIYBEiNScg38vEcyr3YuFP+Q3i7Cm/yH12yO43UFSnKTwuXHZFETmR4JA==}
+
+  '@talkjs/web-components@0.1.10':
+    resolution: {integrity: sha512-ID/EokHfxG7JDMjh24ySswSaZ4Ucr8AOpl3JrAEGc2zBZci/m2qtf6Xm3JEHWWglx1onw6gwwFHgw7YxyY7SzQ==}
+    peerDependencies:
+      '@talkjs/core': ^1.9.0
+
   '@tanstack/query-core@5.100.9':
     resolution: {integrity: sha512-SJSFw1S8+kQ0+knv/XGfrbocWoAlT7vDKsSImtLx3ZPQmEcR46hkDjLSvynSy25N8Ms4tIEini1FuBd5k7IscQ==}
 
@@ -2730,6 +2747,12 @@ packages:
 
   '@types/pbf@3.0.5':
     resolution: {integrity: sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==}
+
+  '@types/prop-types@15.7.15':
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+
+  '@types/react@18.3.28':
+    resolution: {integrity: sha512-z9VXpC7MWrhfWipitjNdgCauoMLRdIILQsAEV+ZesIzBq/oUlxk0m3ApZuMFCXdnS4U7KrI+l3WRUEGQ8K1QKw==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -6043,6 +6066,9 @@ packages:
     resolution: {integrity: sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A==}
     engines: {node: '>=20'}
 
+  preact@10.29.1:
+    resolution: {integrity: sha512-gQCLc/vWroE8lIpleXtdJhTFDogTdZG9AjMUpVkDf2iTCNwYNWA+u16dL41TqUDJO4gm2IgrcMv3uTpjd4Pwmg==}
+
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -6661,6 +6687,9 @@ packages:
 
   tailwindcss@4.2.2:
     resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
+
+  talkjs@0.46.0:
+    resolution: {integrity: sha512-99yMs9oiAV1JpkJlhzXu8TmYrGe1BcYeKw3XjzEns5Rz9YHZ34Fs2GwyX9rM8dukzvWB2MPXOi0vx7NX3qHbXw==}
 
   tapable@2.3.2:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
@@ -9708,6 +9737,14 @@ snapshots:
       tailwindcss: 4.2.2
       vite: 7.3.1(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
 
+  '@talkjs/core@1.10.0': {}
+
+  '@talkjs/web-components@0.1.10(@talkjs/core@1.10.0)':
+    dependencies:
+      '@talkjs/core': 1.10.0
+      '@types/react': 18.3.28
+      preact: 10.29.1
+
   '@tanstack/query-core@5.100.9': {}
 
   '@tanstack/query-core@5.90.16': {}
@@ -9963,7 +10000,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 25.6.0
 
   '@types/d3-array@3.2.2': {}
 
@@ -10149,6 +10186,13 @@ snapshots:
 
   '@types/pbf@3.0.5': {}
 
+  '@types/prop-types@15.7.15': {}
+
+  '@types/react@18.3.28':
+    dependencies:
+      '@types/prop-types': 15.7.15
+      csstype: 3.2.3
+
   '@types/resolve@1.20.2': {}
 
   '@types/supercluster@5.0.3':
@@ -10194,7 +10238,7 @@ snapshots:
 
   '@types/ws@7.4.7':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 25.6.0
 
   '@types/ws@8.18.1':
     dependencies:
@@ -13935,6 +13979,8 @@ snapshots:
 
   powershell-utils@0.1.0: {}
 
+  preact@10.29.1: {}
+
   prelude-ls@1.2.1: {}
 
   pretty-bytes@7.1.0: {}
@@ -14327,7 +14373,7 @@ snapshots:
 
   rpc-websockets@9.3.8:
     dependencies:
-      '@swc/helpers': 0.5.20
+      '@swc/helpers': 0.5.21
       '@types/uuid': 10.0.0
       '@types/ws': 8.18.1
       buffer: 6.0.3
@@ -14659,6 +14705,8 @@ snapshots:
       tailwind-merge: 3.5.0
 
   tailwindcss@4.2.2: {}
+
+  talkjs@0.46.0: {}
 
   tapable@2.3.2: {}
 

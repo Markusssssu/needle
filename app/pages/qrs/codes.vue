@@ -1,95 +1,168 @@
-<script setup lang="ts">
-const { data, columns, pending } = useQRCode();
-const toast = useToast();
-
-const copyLink = async (url: string) => {
-  try {
-    await navigator.clipboard.writeText(url);
-    toast.add({
-      title: "Успешно",
-      description: "Ссылка скопирована",
-      color: "green",
-      icon: "i-heroicons-check-circle",
-    });
-  } catch (err) {
-    toast.add({ title: "Ошибка копирования", color: "red" });
-  }
-};
-
-const getStatusColor = (status: string) => {
-  const map: Record<string, string> = {
-    valid: "green",
-    expired: "orange",
-    exhausted: "red",
-    inactive: "gray",
-  };
-  return map[status] || "gray";
-};
-</script>
-
 <template>
-  <UDashboardPanel id="qr-codes">
-    <template #header>
-      <UDashboardNavbar title="Управление QR-кодами" />
-    </template>
+  <div class="p-6 space-y-6">
+    <!-- Заголовок страницы (Nuxt UI) -->
+    <div
+      class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4"
+    >
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        QR-Коды: {{ currentPeriodLabel }}
+      </h1>
+    </div>
 
-    <template #body>
-      <UCard :ui="{ body: { padding: 'p-0' } }" class="overflow-hidden">
-        <UTable :rows="data" :columns="columns" :loading="pending">
-          <template #code-data="{ row }">
-            <div class="flex items-center gap-4 py-3 px-2">
-              <div
-                class="bg-white p-1 border border-gray-200 rounded flex-shrink-0 w-[58px] h-[58px] flex items-center justify-center"
-              >
-                <ClientOnly>
-                  <NuxtQrCode :value="row.shareUrl" :width="50" :margin="0" />
-                  <template #fallback>
-                    <div class="w-full h-full bg-gray-100 animate-pulse" />
-                  </template>
-                </ClientOnly>
-              </div>
-              <div class="flex flex-col min-w-0">
-                <span
-                  class="text-sm font-semibold text-gray-900 dark:text-white"
-                  >{{ row.code }}</span
-                >
-                <span
-                  class="text-xs text-gray-400 truncate max-w-[150px] font-mono"
-                  >{{ row.shareUrl }}</span
-                >
-              </div>
-            </div>
-          </template>
+    <!-- Сетка карточек на Nuxt UI -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <UCard
+        v-for="card in currentCardsData"
+        :key="card.id"
+        class="cursor-pointer hover:shadow-md transition-shadow border-gray-200 dark:border-gray-800"
+        @click="toggleCard(card.id)"
+      >
+        <!-- Основной контейнер: разделяет QR-код и текстовое описание -->
+        <div class="flex items-center gap-4">
+          <!-- Левый блок: Контейнер для QR-кода -->
+          <div
+            class="flex-shrink-0 p-2 bg-white rounded-lg border border-gray-200 flex items-center justify-center w-[100px] h-[100px]"
+          >
+            <ClientOnly>
+              <!-- Автоимпортируемый компонент вашего модуля -->
+              <Qrcode :value="card.qrUrl" :width="84" :height="84" />
+              <!-- Заглушка на время инициализации страницы в браузере -->
+              <template #fallback>
+                <div class="text-[10px] text-gray-400 animate-pulse">
+                  Загрузка...
+                </div>
+              </template>
+            </ClientOnly>
+          </div>
 
-          <template #status-data="{ row }">
-            <UBadge
-              :color="getStatusColor(row.status)"
-              variant="subtle"
-              class="rounded-full px-2.5"
+          <!-- Правый блок: Описание QR-кода -->
+          <div class="flex-1 min-w-0 space-y-1">
+            <span class="text-xs text-primary-500 font-medium">{{
+              card.periodLabel
+            }}</span>
+            <h3
+              class="text-sm font-bold text-gray-900 dark:text-white truncate"
             >
-              {{ row.statusLabel }}
-            </UBadge>
-          </template>
+              {{ card.label }}
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Сканирований:
+              <span class="font-semibold text-gray-900 dark:text-white">{{
+                card.scans
+              }}</span>
+            </p>
+          </div>
+        </div>
 
-          <template #usedCount-data="{ row }">
-            <div class="text-sm">
-              <span class="font-medium">{{ row.usedCount }}</span>
-              <span class="text-gray-400"> / {{ row.usageLimit ?? "∞" }}</span>
-            </div>
-          </template>
-
-          <template #actions-data="{ row }">
-            <div class="flex justify-end pr-2">
-              <UButton
-                icon="i-heroicons-clipboard-document"
-                color="gray"
-                variant="ghost"
-                @click="copyLink(row.shareUrl)"
-              />
-            </div>
-          </template>
-        </UTable>
+        <div
+          v-if="expandedCardId === card.id"
+          class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-xs space-y-2 text-gray-600 dark:text-gray-400"
+          @click.stop
+        >
+          <div>
+            <span class="text-gray-400 block mb-0.5">Ссылка внутри QR:</span>
+            <span class="font-mono text-primary-500 break-all select-all">{{
+              card.qrUrl
+            }}</span>
+          </div>
+          <div
+            class="flex justify-between bg-gray-50 dark:bg-gray-900 p-2 rounded text-[11px]"
+          >
+            <span>Создано: {{ card.details.createdAt }}</span>
+            <span>Тип: {{ card.details.contentType }}</span>
+          </div>
+        </div>
       </UCard>
-    </template>
-  </UDashboardPanel>
+    </div>
+  </div>
 </template>
+
+<script setup>
+// Никаких импортов нет. ref, computed, useRoute и ваш Qrcode подтягиваются Nuxt автоматически.
+
+const route = useRoute();
+const expandedCardId = ref(null);
+
+// Переключение раскрытия деталей карточки
+const toggleCard = (id) => {
+  expandedCardId.value = expandedCardId.value === id ? null : id;
+};
+
+// Тестовые данные для проверки фильтрации и структуры
+const mockDatabase = [
+  {
+    id: 1,
+    label: "Скидка на 30%",
+    scans: 142,
+    qrUrl: "https://example.com",
+    type: "week",
+    periodLabel: "Неделя",
+    details: { createdAt: "12.05.2026", contentType: "Сайт" },
+  },
+  {
+    id: 2,
+    label: "Скидка на 100%",
+    scans: 89,
+    qrUrl: "https://example.com",
+    type: "week",
+    periodLabel: "Неделя",
+    details: { createdAt: "10.05.2026", contentType: "Купон" },
+  },
+  {
+    id: 3,
+    label: "Скидка на 100%",
+    scans: 89,
+    qrUrl: "https://example.com",
+    type: "week",
+    periodLabel: "Неделя",
+    details: { createdAt: "10.05.2026", contentType: "Купон" },
+  },
+  {
+    id: 4,
+    label: "Скидка на 20%",
+    scans: 512,
+    qrUrl: "https://example.com",
+    type: "month",
+    periodLabel: "Месяц",
+    details: { createdAt: "01.05.2026", contentType: "Форма" },
+  },
+  {
+    id: 4,
+    label: "Скидка на 20%",
+    scans: 512,
+    qrUrl: "https://example.com",
+    type: "month",
+    periodLabel: "Месяц",
+    details: { createdAt: "01.05.2026", contentType: "Форма" },
+  },
+  {
+    id: 5,
+    label: "Скидка на 20%",
+    scans: 512,
+    qrUrl: "https://example.com",
+    type: "month",
+    periodLabel: "Месяц",
+    details: { createdAt: "01.05.2026", contentType: "Форма" },
+  },
+  {
+    id: 6,
+    label: "Скидка на 20%",
+    scans: 512,
+    qrUrl: "https://example.com",
+    type: "month",
+    periodLabel: "Месяц",
+    details: { createdAt: "01.05.2026", contentType: "Форма" },
+  },
+];
+
+const currentCardsData = computed(() => {
+  const currentPeriod = route.query.period || "week";
+  expandedCardId.value = null; // Сворачиваем детали при смене таба
+  return mockDatabase.filter((item) => item.type === currentPeriod);
+});
+
+const currentPeriodLabel = computed(() => {
+  const labels = { week: "Неделя", month: "Месяц", "half-year": "Пол-года" };
+  return labels[route.query.period || "week"] || "Неделя";
+});
+</script>

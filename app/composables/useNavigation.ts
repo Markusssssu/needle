@@ -75,33 +75,9 @@ export const useNavigation = () => {
         label: "Аналитика",
         icon: "i-lucide-chart-column",
         to: "/analytics",
-        defaultOpen: false,
-        children: [
-          {
-            label: "Неделя",
-            to: "/analytics",
-            icon: "i-lucide-calendar-days",
-            onSelect: () => {
-              open.value = false;
-            },
-          },
-          {
-            label: "Месяц",
-            to: "/analytics",
-            icon: "i-lucide-calendar",
-            onSelect: () => {
-              open.value = false;
-            },
-          },
-          {
-            label: "Пол-года",
-            to: "/analytics",
-            icon: "i-lucide-calendar-range",
-            onSelect: () => {
-              open.value = false;
-            },
-          },
-        ],
+        onSelect: () => {
+          open.value = false;
+        },
       },
     ],
     [
